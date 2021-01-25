@@ -32,7 +32,10 @@ const vedicRegex = /(\d)(?=(\d\d)+\d\b)/g;
  * @param {number|string|currency} value
  * @param {object} [opts]
  */
-function currency(value: number | string, opts: object): void {
+
+type customType = number | string;
+
+function currency(value: customType, opts: object): void {
   let that = this;
 
   if(!(that instanceof currency)) {
