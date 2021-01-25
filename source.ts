@@ -1,3 +1,14 @@
+type DefaultSchema = {
+  symbol: string,
+  separator: string,
+  decimal: string,
+  formatWithSymbol: boolean,
+  errorOnInvalid: boolean,
+  precision: number,
+  pattern: string,
+  negativePattern: string
+};
+
 const defaults = {
   symbol: '$',
   separator: ',',
@@ -9,9 +20,9 @@ const defaults = {
   negativePattern: '-!#'
 };
 
-const round = v => Math.round(v);
-const pow = p => Math.pow(10, p);
-const rounding = (value, increment) => round(value / increment) * increment;
+const round = (v: number): number => Math.round(v);
+const pow = (p: number): number => Math.pow(10, p);
+const rounding = (value: number, increment: number): number => round(value / increment) * increment;
 
 const groupRegex = /(\d)(?=(\d{3})+\b)/g;
 const vedicRegex = /(\d)(?=(\d\d)+\d\b)/g;
@@ -21,7 +32,7 @@ const vedicRegex = /(\d)(?=(\d\d)+\d\b)/g;
  * @param {number|string|currency} value
  * @param {object} [opts]
  */
-function currency(value, opts) {
+function currency(value: number | string, opts: object): void {
   let that = this;
 
   if(!(that instanceof currency)) {
@@ -51,7 +62,7 @@ function currency(value, opts) {
   this._precision = precision;
 }
 
-function parse(value, opts, useRounding = true) {
+function parse(value: number, opts: DefaultSchema, useRounding: boolean = true): number {
   let v = 0
     , { decimal, errorOnInvalid, precision: decimals } = opts
     , precision = pow(decimals)
@@ -88,7 +99,7 @@ currency.prototype = {
    * @param {number} number
    * @returns {currency}
    */
-  add(number) {
+  add(number: number) {
     let { intValue, _settings, _precision } = this;
     return currency((intValue += parse(number, _settings)) / _precision, _settings);
   },
@@ -98,7 +109,7 @@ currency.prototype = {
    * @param {number} number
    * @returns {currency}
    */
-  subtract(number) {
+  subtract(number: number) {
     let { intValue, _settings, _precision } = this;
     return currency((intValue -= parse(number, _settings)) / _precision, _settings);
   },
@@ -108,7 +119,7 @@ currency.prototype = {
    * @param {number} number
    * @returns {currency}
    */
-  multiply(number) {
+  multiply(number: number) {
     let { intValue, _settings } = this;
     return currency((intValue *= number) / pow(_settings.precision), _settings);
   },
@@ -118,7 +129,7 @@ currency.prototype = {
    * @param {number} number
    * @returns {currency}
    */
-  divide(number) {
+  divide(number: number) {
     let { intValue, _settings } = this;
     return currency(intValue /= parse(number, _settings, false), _settings);
   },
@@ -129,7 +140,7 @@ currency.prototype = {
    * @param {number} count
    * @returns {array}
    */
-  distribute(count) {
+  distribute(count: number) {
     let { intValue, _precision, _settings } = this
       , distribution = []
       , split = Math[intValue >= 0 ? 'floor' : 'ceil'](intValue / count)
@@ -151,7 +162,7 @@ currency.prototype = {
    * Returns the dollar value.
    * @returns {number}
    */
-  dollars() {
+  dollars(): number {
     return ~~this.value;
   },
 
@@ -159,7 +170,7 @@ currency.prototype = {
    * Returns the cent value.
    * @returns {number}
    */
-  cents() {
+  cents(): number {
     let { intValue, _precision } = this;
     return ~~(intValue % _precision);
   },
@@ -169,7 +180,7 @@ currency.prototype = {
    * @param {boolean} useSymbol - format with currency symbol
    * @returns {string}
    */
-  format(useSymbol) {
+  format(useSymbol: boolean): string {
     let { pattern, negativePattern, formatWithSymbol, symbol, separator, decimal, groups } = this._settings
       , values = (this + '').replace(/^-/, '').split('.')
       , dollars = values[0]
@@ -187,7 +198,7 @@ currency.prototype = {
    * Formats the value as a string according to the formatting settings.
    * @returns {string}
    */
-  toString() {
+  toString(): string {
     let { intValue, _precision, _settings } = this;
     return rounding(intValue / _precision, _settings.increment).toFixed(_settings.precision);
   },
