@@ -143,9 +143,9 @@ currency.prototype = {
    * @param {number} count
    * @returns {array}
    */
-  distribute(count: number) {
+  distribute(count: number): Array<number> {
     let { intValue, _precision, _settings } = this
-      , distribution = []
+      , distribution: number[] = []
       , split = Math[intValue >= 0 ? 'floor' : 'ceil'](intValue / count)
       , pennies = Math.abs(intValue - (split * count));
 
