@@ -34,8 +34,9 @@ const vedicRegex = /(\d)(?=(\d\d)+\d\b)/g;
  */
 
 type customType = number | string;
+type FType = (value: customType, opt: object) => void;
 
-function currency(value: customType, opts: object): void {
+const currency: FType = function (value: customType, opt: object) {
   let that = this;
 
   if(!(that instanceof currency)) {
