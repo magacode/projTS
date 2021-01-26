@@ -66,7 +66,9 @@ const currency: FType = function (value: customType, opts: object) {
   this._precision = precision;
 }
 
-function parse(value: number, opts: DefaultSchema, useRounding: boolean = true): number {
+type FTypeParse = (value: number, opts: object, useRounding: boolean) => number;
+
+const parse: FTypeParse = function (value: number, opts: DefaultSchema, useRounding: boolean = true): number {
   let v = 0
     , { decimal, errorOnInvalid, precision: decimals } = opts
     , precision = pow(decimals)
