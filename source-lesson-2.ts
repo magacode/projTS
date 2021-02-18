@@ -1,12 +1,47 @@
-var emitter = {};
+type StatusFunc = {
+  (type: string, handler: () => {}): object;
+}
 
-function Emitter() {
+type TriggerFunc = {
+  (type: string, args: []): object;
+}
+
+type OffByTypeFunc = {
+  (type: string): object;
+}
+
+type OffAllFunc = {
+  (): object;
+}
+
+type MixinFunc = {
+  (obj: object, arr: []): void;
+}
+
+type EmitterObj = {
+  on?: StatusFunc,
+  off?: StatusFunc,
+  trigger?: TriggerFunc,
+  _dispatch?: TriggerFunc,
+  _offByHandler?: StatusFunc,
+  _offByType?: OffByTypeFunc,
+  _offAll?: OffAllFunc,
+  mixin?: MixinFunc,
+}
+
+var emitter: EmitterObj = {};
+
+function Emitter(): EmitterObj {
   var e = Object.create(emitter);
   e.events = {};
   return e;
 }
 
-function Event(type) {
+type EventFunc = {
+  (type: string): void;
+}
+
+let Event: EventFunc = function (type) {
   this.type = type;
   this.timeStamp = new Date();
 }
